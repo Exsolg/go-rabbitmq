@@ -29,7 +29,7 @@ const (
 // Consumer allows you to create and connect to queues for data consumption.
 type Consumer struct {
 	chanManager                *channelmanager.ChannelManager
-	reconnectErrCh             <-chan error
+	reconnectErrCh             chan error
 	closeConnectionToManagerCh chan<- struct{}
 	options                    ConsumerOptions
 
@@ -96,7 +96,7 @@ func NewConsumer(
 			if err != nil {
 				consumer.options.Logger.Fatalf("error restarting consumer goroutines after cancel or close: %v", err)
 				consumer.options.Logger.Fatalf("consumer closing, unable to recover")
-				return
+				consumer.reconnectErrCh <- err
 			}
 		}
 	}()
