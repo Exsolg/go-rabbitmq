@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/wagslane/go-rabbitmq/internal/channelmanager"
+	"github.com/Exsolg/go-rabbitmq/internal/channelmanager"
 )
 
 // Action is an action that occurs after processed this delivery
@@ -29,7 +29,7 @@ const (
 // Consumer allows you to create and connect to queues for data consumption.
 type Consumer struct {
 	chanManager                *channelmanager.ChannelManager
-	reconnectErrCh             <-chan error
+	reconnectErrCh             chan error
 	closeConnectionToManagerCh chan<- struct{}
 	options                    ConsumerOptions
 
@@ -96,7 +96,7 @@ func NewConsumer(
 			if err != nil {
 				consumer.options.Logger.Fatalf("error restarting consumer goroutines after cancel or close: %v", err)
 				consumer.options.Logger.Fatalf("consumer closing, unable to recover")
-				return
+				consumer.reconnectErrCh <- err
 			}
 		}
 	}()

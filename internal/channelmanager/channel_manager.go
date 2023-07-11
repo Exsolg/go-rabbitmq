@@ -6,9 +6,9 @@ import (
 	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/wagslane/go-rabbitmq/internal/connectionmanager"
-	"github.com/wagslane/go-rabbitmq/internal/dispatcher"
-	"github.com/wagslane/go-rabbitmq/internal/logger"
+	"github.com/Exsolg/go-rabbitmq/internal/connectionmanager"
+	"github.com/Exsolg/go-rabbitmq/internal/dispatcher"
+	"github.com/Exsolg/go-rabbitmq/internal/logger"
 )
 
 // ChannelManager -
@@ -144,6 +144,6 @@ func (chanManager *ChannelManager) Close() error {
 
 // NotifyReconnect adds a new subscriber that will receive error messages whenever
 // the connection manager has successfully reconnect to the server
-func (chanManager *ChannelManager) NotifyReconnect() (<-chan error, chan<- struct{}) {
+func (chanManager *ChannelManager) NotifyReconnect() (chan error, chan<- struct{}) {
 	return chanManager.dispatcher.AddSubscriber()
 }
